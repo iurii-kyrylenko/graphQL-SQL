@@ -25,6 +25,8 @@ http://localhost:3000/graphql
 ```
 
 ### Some ideas were borrowed from:
+
 * https://github.com/reindexio/graphql-nodejs-newsfeed
 * https://github.com/mrblueblue/graphql-express-sqlite
+
 Thanks, guys!
