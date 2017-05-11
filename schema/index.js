@@ -17,7 +17,7 @@ const {
 const {
   getUsers,
   getUsersCountPromised
-} = require('../data/resolvers')
+} = require('../data/model')
 
 const userType = new GraphQLObjectType({
   name: 'User',
