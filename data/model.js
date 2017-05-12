@@ -12,7 +12,26 @@ const getUsersCountPromised = () => {
   return getUsersCount().then(([{ count }]) => count)
 }
 
+const getUser = (id) => {
+  return db('users').where('id', id).first()
+}
+
+const getUserPromised = (id) => {
+  return getUser(id).then(user => user)
+}
+
+const getStories = () => {
+  return db('stories')
+}
+
+const getUserStories = (userId) => {
+  return db('stories').where('author', userId)
+}
+
 module.exports = {
   getUsers,
-  getUsersCountPromised
+  getUsersCountPromised,
+  getUserPromised,
+  getStories,
+  getUserStories
 }

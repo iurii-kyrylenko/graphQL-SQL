@@ -10,13 +10,15 @@ const {
   connectionArgs,
   connectionDefinitions,
   connectionFromPromisedArray,
-  // connectionFromPromisedArraySlice,
   mutationWithClientMutationId
 } = require('graphql-relay')
 
 const {
   getUsers,
-  getUsersCountPromised
+  getUsersCountPromised,
+  getUserPromised,
+  getStories,
+  getUserStories
 } = require('../data/model')
 
 const userType = new GraphQLObjectType({
@@ -30,6 +32,32 @@ const userType = new GraphQLObjectType({
     name: {
       type: GraphQLString,
       description: 'User name'
+    },
+    stories: {
+      type: storyConnection,
+      description: 'User stories',
+      args: connectionArgs,
+      resolve: ({ id }, args) => connectionFromPromisedArray(getUserStories(id), args)
+    }
+  })
+})
+
+const storyType = new GraphQLObjectType({
+  name: 'Story',
+  description: 'Story',
+  fields: () => ({
+    id: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: 'Story Id'
+    },
+    text: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'Story content'
+    },
+    author: {
+      type: userType,
+      description: 'Story author',
+      resolve: ({ author }) => getUserPromised(author)
     }
   })
 })
@@ -46,6 +74,10 @@ const { connectionType: userConnection } = connectionDefinitions({
   })
 })
 
+const { connectionType: storyConnection } = connectionDefinitions({
+  name: 'Story', nodeType: storyType
+})
+
 const queryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
@@ -54,7 +86,12 @@ const queryType = new GraphQLObjectType({
       description: 'Users',
       args: connectionArgs,
       resolve: (_, args) => connectionFromPromisedArray(getUsers(), args)
-      // resolve: (_, args) => connectionFromPromisedArraySlice(getUsers(), args, {sliceStart: 0, arrayLength: 24})
+    },
+    stories: {
+      type: storyConnection,
+      description: 'Stories',
+      args: connectionArgs,
+      resolve: (_, args) => connectionFromPromisedArray(getStories(), args)
     }
   })
 })
