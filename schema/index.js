@@ -7,6 +7,7 @@ const {
 } = require('graphql')
 
 const {
+  globalIdField,
   connectionArgs,
   connectionDefinitions,
   connectionFromPromisedArray,
@@ -25,10 +26,7 @@ const userType = new GraphQLObjectType({
   name: 'User',
   description: 'User',
   fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLInt),
-      description: 'User Id'
-    },
+    id: globalIdField('User'),
     name: {
       type: GraphQLString,
       description: 'User name'
@@ -46,10 +44,7 @@ const storyType = new GraphQLObjectType({
   name: 'Story',
   description: 'Story',
   fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLInt),
-      description: 'Story Id'
-    },
+    id: globalIdField('Story'),
     text: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'Story content'
