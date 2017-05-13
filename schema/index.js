@@ -23,7 +23,8 @@ const {
   getStories,
   getUserStories,
   addUserPromised,
-  updateUserPromised
+  updateUserPromised,
+  deleteUserPromised,
 } = require('../data/model')
 
 const userType = new GraphQLObjectType({
@@ -127,11 +128,23 @@ const updateUserMutation = mutationWithClientMutationId({
   }
 })
 
+const deleteUserMutation = {
+  type: GraphQLID,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) }
+  },
+  resolve: (_, { id }) => {
+    const userLocalId = fromGlobalId(id).id
+    return deleteUserPromised(userLocalId, id)
+  }
+}
+
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     addUser: addUserMutation,
-    updateUser: updateUserMutation
+    updateUser: updateUserMutation,
+    deleteUser: deleteUserMutation
   })
 })
 

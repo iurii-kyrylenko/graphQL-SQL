@@ -44,6 +44,14 @@ const updateUserPromised = (id, name, key) => {
   return updateUser(id, name).then(() => ({ [key]: id }))
 }
 
+const deleteUser = (id) => {
+  return db('users').where('id', id).del()
+}
+
+const deleteUserPromised = (id, payload) => {
+  return deleteUser(id).then(() => payload)
+}
+
 module.exports = {
   getUsers,
   getUsersCountPromised,
@@ -51,5 +59,6 @@ module.exports = {
   getStories,
   getUserStories,
   addUserPromised,
-  updateUserPromised
+  updateUserPromised,
+  deleteUserPromised,
 }

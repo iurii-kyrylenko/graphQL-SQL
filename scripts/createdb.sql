@@ -14,7 +14,7 @@ CREATE TABLE stories
   id INTEGER PRIMARY KEY,
   text TEXT NOT NULL,
   author INTEGER NOT NULL,
-  FOREIGN KEY(author) REFERENCES users(id)
+  FOREIGN KEY(author) REFERENCES users(id) ON DELETE CASCADE
 );
 
 INSERT INTO users('name')
