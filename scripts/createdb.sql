@@ -6,14 +6,14 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users
 (
   id INTEGER PRIMARY KEY,
-  name VARCHAR(255)
+  name VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE stories
 (
   id INTEGER PRIMARY KEY,
-  text TEXT,
-  author INTEGER,
+  text TEXT NOT NULL,
+  author INTEGER NOT NULL,
   FOREIGN KEY(author) REFERENCES users(id)
 );
 

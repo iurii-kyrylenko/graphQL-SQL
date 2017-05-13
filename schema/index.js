@@ -1,4 +1,5 @@
 const {
+  GraphQLID,
   GraphQLInt,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -8,6 +9,7 @@ const {
 
 const {
   globalIdField,
+  fromGlobalId,
   connectionArgs,
   connectionDefinitions,
   connectionFromPromisedArray,
@@ -19,7 +21,9 @@ const {
   getUsersCountPromised,
   getUserPromised,
   getStories,
-  getUserStories
+  getUserStories,
+  addUserPromised,
+  updateUserPromised
 } = require('../data/model')
 
 const userType = new GraphQLObjectType({
@@ -91,8 +95,49 @@ const queryType = new GraphQLObjectType({
   })
 })
 
+const addUserMutation = mutationWithClientMutationId({
+  name: 'AddUser',
+  inputFields: {
+    name: { type: new GraphQLNonNull(GraphQLString) }
+  },
+  outputFields: {
+    user: {
+      type: userType,
+      resolve: ({ userLocalId }) => getUserPromised(userLocalId)
+    }
+  },
+  mutateAndGetPayload: ({ name }) => addUserPromised(name, 'userLocalId')
+})
+
+const updateUserMutation = mutationWithClientMutationId({
+  name: 'UpdateUser',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    name: { type: new GraphQLNonNull(GraphQLString) }
+  },
+  outputFields: {
+    user: {
+      type: userType,
+      resolve: ({ userLocalId }) => getUserPromised(userLocalId)
+    }
+  },
+  mutateAndGetPayload: ({ id, name }) => {
+    const userLocalId = fromGlobalId(id).id
+    return updateUserPromised(userLocalId, name, 'userLocalId')
+  }
+})
+
+const mutationType = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: () => ({
+    addUser: addUserMutation,
+    updateUser: updateUserMutation
+  })
+})
+
 const Schema = new GraphQLSchema({
-  query: queryType
+  query: queryType,
+  mutation: mutationType
 })
 
 module.exports = Schema

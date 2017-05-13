@@ -28,10 +28,28 @@ const getUserStories = (userId) => {
   return db('stories').where('author', userId)
 }
 
+const addUser = (name) => {
+  return db('users').insert({ name })
+}
+
+const addUserPromised = (name, key) => {
+  return addUser(name).then(([id]) => ({ [key]: id }))
+}
+
+const updateUser = (id, name) => {
+  return db('users').where('id', id).update({ name })
+}
+
+const updateUserPromised = (id, name, key) => {
+  return updateUser(id, name).then(() => ({ [key]: id }))
+}
+
 module.exports = {
   getUsers,
   getUsersCountPromised,
   getUserPromised,
   getStories,
-  getUserStories
+  getUserStories,
+  addUserPromised,
+  updateUserPromised
 }
